@@ -4,6 +4,8 @@ import Vue from 'vue'
 import App from './App'
 import iView from 'iview'
 import Router from 'vue-router'
+import Swal from 'sweetalert2'
+import Moment from 'moment'
 import axios from './api'
 import { includeRouterMap, asyncRouterMap } from './router'
 import store from './store'
@@ -25,6 +27,8 @@ Vue.use(Router)
 Vue.use(store)
 
 global.cookie = Cookies
+global.swal = Swal
+global.moment = Moment
 Vue.prototype.$http = axios
 Vue.prototype.util = Util
 

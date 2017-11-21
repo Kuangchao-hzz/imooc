@@ -26,6 +26,8 @@ module.exports = {
   },
   "globals": {
     "cookie": false,
+    "swal": false,
+    "moment": false,
     "$http": false
   }
 }

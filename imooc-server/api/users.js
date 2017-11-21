@@ -44,62 +44,100 @@ router.post('/signup', (req, res) => {
 })
 // 用户权限接口
 router.post('/admin/list', (req, res) => {
-  res.send({
-    code: 1,
-    msg: 'access',
-    list: [
-      {
-        id: 1,
-        signName: 'admin',
-        realName: '何周泽',
-        admin: '管理员'
-      }
-    ],
-    total: 1
+	userModel.fetch((err, users) => {
+	  if (err) return console.log(err)
+		res.send({
+			code: 1,
+			msg: 'access',
+			list: users,
+			total: 1
+		})
   })
 })
 // 用户新增接口
 router.post('/admin/add', (req, res) => {
-  userModel.findOne({id: req.body.username}, function (err, data) {
-    if (err) return console.log(err)
-    console.log(data)
-    if (data) {
-      var user = new userModel({
-        username: req.body.username,
-        realname: req.body.realname,
-        password: req.body.password
-      })
-      user.save((err, data) => {
-        if (err) return console.log(err)
-      })
-      res.send({
-        code: 1,
-        msg: 'access'
-      })
+	var user = new userModel({
+		username: req.body.username,
+		realname: req.body.realname,
+		password: req.body.password
+	})
+	userModel.findByUsername(req.body.username, (err, data) => {
+		console.log(data)
+		if (err) return console.log(err)
+    if (!data) {
+	    user.save((err, data) => {
+		    if (err) return console.log(err)
+		    res.send({
+			    code: 1,
+			    msg: 'access'
+		    })
+	    })
     } else {
-      res.send({
-        code: 2,
-        msg: '改角色以被注册！'
-      })
+	    res.send({
+		    code: 2,
+		    msg: '该名称以被注册'
+	    })
     }
+
   })
 })
 // 用户编辑接口
 router.post('/admin/edit', (req, res) => {
-  userModel.findOne({id: req.body.id}, function (err, data) {
-    if (err) return console.log(err)
-    if (data) {
-      res.send(Object.assign({
-        code: 1,
-        msg: 'access'
-      }, data))
-    } else {
-      res.send({
-        code: 2,
-        msg: '改角色不存在！'
-      })
-    }
-  })
-})
+	var id = req.body.id
+	if (id) {
+		userModel.findById(id, function (err, data) {
+			if (err) return console.log(err)
+			res.send({
+				code: 1,
+				msg: 'access',
+				data: data
+			})
+		})
+	} else {
+		res.send({
+			code: 2,
+			msg: 'id不存在'
+		})
+	}
 
+})
+// 查询单条接口
+router.post('/admin/findById', (req, res) => {
+	var id = req.body.id
+	if (id) {
+		userModel.findById(id, function (err, data) {
+			if (err) return console.log(err)
+			res.send({
+				code: 1,
+				msg: 'access',
+				data: data
+			})
+		})
+	} else {
+		res.send({
+			code: 2,
+			msg: 'id不存在'
+		})
+	}
+
+})
+// 用户删除接口
+router.post('/admin/del', (req, res) => {
+	let id = req.body.id
+	if (id) {
+		userModel.remove({_id: id}, function (err, data) {
+			console.log(111)
+			if (err) return console.log(err)
+			res.send({
+				code: 1,
+				msg: 'access'
+			})
+		})
+	} else {
+		res.send({
+			code: 2,
+			msg: 'id不存在'
+		})
+	}
+})
 module.exports = router

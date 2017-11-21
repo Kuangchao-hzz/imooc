@@ -17,7 +17,7 @@
       :title="titleHandle"
       v-model="roleModal"
       @on-cancel="handleCancel('roleModalForm')"
-      @on-ok="userAdminListFn()">
+      @on-ok="userAdminHandleFn()">
       <Form :model="roleModalForm" ref="roleModalForm" :label-width="80" :rules="roleModalForm.rules">
         <FormItem label="账号名称" prop="username">
           <Input v-model="roleModalForm.username" autocomplete="off" placeholder="请输入账号名称..."></Input>
@@ -98,17 +98,24 @@
             {
               align: 'center',
               title: 'Id',
-              key: 'id'
+              key: '_id'
             },
             {
               align: 'center',
               title: '名称',
-              key: 'signName'
+              key: 'username'
             },
             {
               align: 'center',
               title: '真实姓名',
               key: 'realname'
+            },
+            {
+              align: 'center',
+              title: '注册时间',
+              render: (h, params) => {
+                return h('div', moment(params.row.meta.createTime).format('YYYY-MM-DD HH:mm:ss'))
+              }
             },
             {
               align: 'center',
@@ -125,10 +132,43 @@
                       type: 'primary',
                       size: 'small'
                     },
+                    on: {
+                      click: () => {
+                        this.roleModal = true
+                        this.userAdminFindByIdFn(params.row._id)
+                      }
+                    },
                     style: {
                       marginRight: '5px'
                     }
-                  }, '编辑')
+                  }, '编辑'),
+                  h('Button', {
+                    props: {
+                      type: 'error',
+                      size: 'small'
+                    },
+                    on: {
+                      click: () => {
+                        console.log(params)
+                        swal({
+                          title: '你确定要删除该账号?',
+                          type: 'warning',
+                          showCancelButton: true,
+                          confirmButtonColor: '#3085d6',
+                          cancelButtonColor: '#d33',
+                          confirmButtonText: '确定',
+                          cancelButtonText: '取消'
+                        }).then((result) => {
+                          if (result.value) {
+                            this.userAdminHandleFn('/del', params.row._id)
+                          }
+                        })
+                      }
+                    },
+                    style: {
+                      marginRight: '5px'
+                    }
+                  }, '删除')
                 ])
               }
             }
@@ -147,7 +187,7 @@
       }
     },
     mounted () {
-      this.userAdminListFn('/list')
+      this.userAdminListFn()
       this.treeData = this.adminTree(this.currentRouter)
     },
     methods: {
@@ -180,19 +220,33 @@
       handleCancel (ref) {
         this.$refs[ref].resetFields()
       },
-      userAdminListFn ($type) {
-        if (!$type) {
-          this.roleModalForm.id === '' ? $type = '/add' : $type = '/edit'
-        }
-        var $params = {
-          id: this.roleModalForm.id,
+      /*
+      * @$type='/list' - 【数据列表接口】
+      * @$type='/add'  - 【添加账号接口】
+      * @$type='/edit' - 【编辑账号接口】
+      * @$type='/del'  - 【删除账号接口】
+      * */
+      userAdminListFn () {
+        this.$http.userAdminList('/list', {}).then(res => {
+          this.tableData.data = res
+        })
+      },
+      userAdminFindByIdFn ($id) {
+        this.$http.userAdminList('/findById', {id: $id}).then(res => {
+          this.roleModalForm.id = res.data._id
+          this.roleModalForm.username = res.data.username
+          this.roleModalForm.realname = res.data.realname
+        })
+      },
+      userAdminHandleFn ($type = '/add', $id) {
+        let $params = {
+          id: $id || this.roleModalForm.id,
           username: this.roleModalForm.username,
           realname: this.roleModalForm.realname,
           password: this.roleModalForm.password
         }
-        console.log(this.roleModalForm.role)
-        this.$http.userAdminList($params, $type).then(res => {
-          this.tableData.data = res
+        this.$http.userAdminList($type, $params).then(res => {
+          this.userAdminListFn()
         })
       }
     }

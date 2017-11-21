@@ -37,8 +37,7 @@ export default {
     return instance.post('/users/signup', $params)
   },
   // 用户权限接口
-  userAdminList ($params = {}, $method = '') {
-    console.log($params)
+  userAdminList ($method = '', $params = {}) {
     return instance.post(`users/admin${$method}`, $params)
   }
 }
