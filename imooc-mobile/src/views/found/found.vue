@@ -1,13 +1,15 @@
 <template>
   <div class="app-view-found">
-    <tabs-list selected="sj" fontSize="1.4rem" animate touch>
+    <tabs-list selected="sj" fontSize="1.4rem" animate>
       <pane label="手记" name="sj">
         <foundNote></foundNote>
       </pane>
       <pane label="猿问" name="yw">
         <foundIssue></foundIssue>
       </pane>
-      <pane label="动态" name="dt"></pane>
+      <pane label="动态" name="dt">
+        <foundDynamic></foundDynamic>
+      </pane>
     </tabs-list>
   </div>
 </template>
@@ -15,6 +17,7 @@
 <script>
 import foundNote from './childrens/note.vue'
 import foundIssue from './childrens/issue.vue'
+import foundDynamic from './childrens/dynamic.vue'
 export default {
   data () {
     return {
@@ -33,7 +36,8 @@ export default {
   },
   components: {
     foundNote,
-    foundIssue
+    foundIssue,
+    foundDynamic
   }
 }
 </script>

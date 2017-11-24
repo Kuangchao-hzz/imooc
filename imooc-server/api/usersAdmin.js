@@ -1,19 +1,10 @@
 var express = require('express')
 var router = express.Router()
-var userModel = require('../models/userModel.js')
+var usersAdmin = require('../models/usersAdminModel.js')
 // 用户登录
 router.post('/signup', (req, res) => {
-  userModel.findOne({id: 0}, function (err, person) {
-    if (err) return console.log(err)
-    console.log(person)
-  })
-  // var user = new userModel({
-  //   username: req.body.username,
-  //   password: req.body.password
-  // })
-  // user.save((err, data) => {
-  //   if (err) return console.log(err)
-  // })
+	req.session.username = req.body.username
+  console.log(req.session)
   res.send({
     msg: 'access',
     code: 1,
@@ -44,25 +35,31 @@ router.post('/signup', (req, res) => {
 })
 // 用户权限接口
 router.post('/admin/list', (req, res) => {
-	userModel.fetch((err, users) => {
-	  if (err) return console.log(err)
+	if (req.session.username) {
+    usersAdmin.fetch((err, users) => {
+      if (err) return console.log(err)
+      res.send({
+        code: 1,
+        msg: 'access',
+        list: users,
+        total: 1
+      })
+    })
+	} else {
 		res.send({
-			code: 1,
-			msg: 'access',
-			list: users,
-			total: 1
+			code: -1,
+			msg: '请重新登录'
 		})
-  })
+	}
 })
 // 用户新增接口
 router.post('/admin/add', (req, res) => {
-	var user = new userModel({
+	var user = new usersAdmin({
 		username: req.body.username,
 		realname: req.body.realname,
 		password: req.body.password
 	})
-	userModel.findByUsername(req.body.username, (err, data) => {
-		console.log(data)
+	usersAdmin.findByUsername(req.body.username, (err, data) => {
 		if (err) return console.log(err)
     if (!data) {
 	    user.save((err, data) => {
@@ -78,14 +75,14 @@ router.post('/admin/add', (req, res) => {
 		    msg: '该名称以被注册'
 	    })
     }
-
   })
 })
 // 用户编辑接口
 router.post('/admin/edit', (req, res) => {
 	var id = req.body.id
+	console.log(req.body)
 	if (id) {
-		userModel.findById(id, function (err, data) {
+		usersAdmin.update({_id: id}, req.body, function (err, data) {
 			if (err) return console.log(err)
 			res.send({
 				code: 1,
@@ -93,19 +90,13 @@ router.post('/admin/edit', (req, res) => {
 				data: data
 			})
 		})
-	} else {
-		res.send({
-			code: 2,
-			msg: 'id不存在'
-		})
 	}
-
 })
 // 查询单条接口
 router.post('/admin/findById', (req, res) => {
 	var id = req.body.id
 	if (id) {
-		userModel.findById(id, function (err, data) {
+		usersAdmin.findById(id, function (err, data) {
 			if (err) return console.log(err)
 			res.send({
 				code: 1,
@@ -125,7 +116,7 @@ router.post('/admin/findById', (req, res) => {
 router.post('/admin/del', (req, res) => {
 	let id = req.body.id
 	if (id) {
-		userModel.remove({_id: id}, function (err, data) {
+		usersAdmin.remove({_id: id}, function (err, data) {
 			console.log(111)
 			if (err) return console.log(err)
 			res.send({

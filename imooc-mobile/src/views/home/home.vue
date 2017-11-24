@@ -1,6 +1,6 @@
 <template>
   <div class="app-view-home">
-    <tabs-list selected="tj" fontSize="1.4rem" animate touch>
+    <tabs-list selected="tj" fontSize="1.4rem" animate>
       <pane label="推荐" name="tj" proevent="">
         <recommend></recommend>
       </pane>

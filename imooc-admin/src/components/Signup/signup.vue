@@ -18,7 +18,10 @@
           </Input>
         </FormItem>
         <FormItem>
-          <Button @click="handleSubmit('signupForm')" type="primary" long>登录</Button>
+          <Button @click="handleSubmit('signupForm')" type="primary" long :loading="loading">
+            <span v-if="!loading">登录</span>
+            <span v-else="!loading">登录中...</span>
+          </Button>
         </FormItem>
       </Form>
     </Card>
@@ -29,6 +32,7 @@
     name: 'signup',
     data () {
       return {
+        loading: false,
         title: '登录',
         signupForm: {
           username: 'imooc-admin',
@@ -48,13 +52,18 @@
       handleSubmit (form) {
         this.$refs[form].validate((valid) => {
           if (valid) {
+            this.loading = true
             let $params = {
               username: this.signupForm.username,
               password: this.signupForm.password
             }
             this.$http.userSignup($params).then(res => {
+              this.loading = false
               cookie.set('auths', JSON.stringify(res.auth))
               this.$router.push('/home/recommend')
+            }, err => {
+              this.loading = false
+              console.log(err)
             })
           } else {
             return false

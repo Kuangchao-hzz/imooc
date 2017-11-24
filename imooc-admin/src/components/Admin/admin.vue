@@ -16,7 +16,7 @@
       width="800"
       :title="titleHandle"
       v-model="roleModal"
-      @on-cancel="handleCancel('roleModalForm')"
+      @on-cancel="handleCancel()"
       @on-ok="userAdminHandleFn()">
       <Form :model="roleModalForm" ref="roleModalForm" :label-width="80" :rules="roleModalForm.rules">
         <FormItem label="账号名称" prop="username">
@@ -119,6 +119,13 @@
             },
             {
               align: 'center',
+              title: '更新时间',
+              render: (h, params) => {
+                return h('div', moment(params.row.meta.updateTime).format('YYYY-MM-DD HH:mm:ss'))
+              }
+            },
+            {
+              align: 'center',
               title: '权限分配',
               key: 'admin'
             },
@@ -198,10 +205,12 @@
           if (item.children && item.children.length > 0 && !item.meta.single) {
             trees.push({
               title: item.meta.title,
+              name: item.name,
               expand: true,
               children: item.children.map(_item => {
                 return {
                   title: _item.meta.title,
+                  name: _item.name,
                   expand: true
                 }
               })
@@ -210,6 +219,7 @@
           } else {
             trees.push({
               title: item.meta.title,
+              name: item.name,
               expand: true
             })
           }
@@ -217,8 +227,9 @@
         return trees
       },
       // 获取账户数据list
-      handleCancel (ref) {
-        this.$refs[ref].resetFields()
+      handleCancel () {
+        this.$refs['roleModalForm'].resetFields()
+        this.roleModalForm.id = ''
       },
       /*
       * @$type='/list' - 【数据列表接口】
@@ -243,9 +254,15 @@
           id: $id || this.roleModalForm.id,
           username: this.roleModalForm.username,
           realname: this.roleModalForm.realname,
-          password: this.roleModalForm.password
+          password: this.roleModalForm.password,
+          auth: {}
         }
+        if (this.roleModalForm.id) {
+          $type = '/edit'
+        }
+        // let checkedNodes = this.$refs['roleTree'].getCheckedNodes()
         this.$http.userAdminList($type, $params).then(res => {
+          this.handleCancel()
           this.userAdminListFn()
         })
       }

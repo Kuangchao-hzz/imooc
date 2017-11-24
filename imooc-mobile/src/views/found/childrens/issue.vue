@@ -48,7 +48,9 @@ export default {
 </script>
 <style lang="scss" scoped>
 .found-issue-container{
-
+  a{
+    text-decoration: none;
+  }
 }
 </style>
 

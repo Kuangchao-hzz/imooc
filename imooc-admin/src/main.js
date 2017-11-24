@@ -24,7 +24,7 @@ if (process.env.NODE_ENV === 'development') {
 
 Vue.use(iView)
 Vue.use(Router)
-Vue.use(store)
+Vue.use(axios)
 
 global.cookie = Cookies
 global.swal = Swal
@@ -77,13 +77,6 @@ router.beforeEach((to, from, next) => {
   }
   iView.LoadingBar.finish()
 })
-
-// function asyncRouterMapFn (routerName) {
-//   var permission = asyncRouterMap.filter((asyncRouter) => {
-//     return asyncRouter.name === routerName
-//   })
-//   store.commit('PERMISSIONROUTER', permission)
-// }
 
 Vue.config.productionTip = false
 /* eslint-disable no-new */

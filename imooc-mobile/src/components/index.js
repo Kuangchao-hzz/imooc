@@ -8,6 +8,7 @@ import languageList from './language-list.vue'
 import tabsList from './tabs-containeres/tabs-list.vue'
 import tabsList1 from './tabs-containeres'
 import issueList from './issue-list.vue'
+import icon from './icon/icon.vue'
 
 const install = function (Vue, config = {}) {
   if (install.installed) return
@@ -22,6 +23,7 @@ const install = function (Vue, config = {}) {
   Vue.component(issueList.name, issueList)
   Vue.component(tabsList1.name, tabsList1)
   Vue.component(tabsList1.pane.name, tabsList1.pane)
+  Vue.component(icon.name, icon)
 }
 
 if (typeof window !== 'undefined' && window.Vue) {

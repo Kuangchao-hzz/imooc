@@ -33,7 +33,7 @@ export default new Router({
         {
           path: 'my',
           name: '我的',
-          component: resolve => require(['../views/home/home.vue'], resolve)
+          component: resolve => require(['../views/my/my.vue'], resolve)
         },
         {
           path: 'test',

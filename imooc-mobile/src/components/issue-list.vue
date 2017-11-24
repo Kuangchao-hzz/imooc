@@ -19,14 +19,14 @@
         </p>
       </div>
     </div>
-  </div>  
+  </div>
 </template>
 <script>
 export default {
   name: 'issue-list'
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss" type="text/scss" scoped>
 .issue-list-container{
   overflow: hidden;
   position: relative;
@@ -51,12 +51,10 @@ export default {
       }
     }
     .issue__desc{
-      margin-left: 1rem;
-      float: left;
+      margin-left: 4rem;
       p{
         margin: 0;
         padding: 0;
-        width: 25.2rem;
         overflow: hidden;
         min-height: .48rem;
         text-overflow: ellipsis;
