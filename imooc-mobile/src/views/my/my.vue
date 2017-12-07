@@ -177,9 +177,9 @@
       background: #fff;
       display: flex;
       align-items: center;
+      padding-right: 0;
       .icon{
         width: 3rem;
-        margin-bottom: 6px;
       }
       p{
         width: 100%;

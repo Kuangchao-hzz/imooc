@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+</head>
+<style>
+	*{
+		margin: 0;
+		padding: 0;
+	}
+	.mulit_line{
+		border:1px dashed #cccccc;
+		padding-left:5px;
+	}
+	.mulit_line span{
+		display:inline-block;
+		line-height:14px;
+		vertical-align:middle;
+	}
+	.mulit_line i{
+		width:1px;
+		display:inline-block;
+		vertical-align:middle;
+		font-size:0;
+		background:red;
+		line-height:150px;
+	}
+</style>
+<body>
+<p class="mulit_line">
+    <span style="font-size:12px;">这里是高度为150px的标签内的多行文字，文字大小为12像素。
+        <br>这里是第二行，用来测试多行的显示效果。
+    </span>
+	<i>&nbsp;</i>
+</p>
+</body>
+<script>
+	function a (cd) {
+	  console.log(1111)
+		cd()
+	}
+	a (function () {
+		console.log(2222)
+  })
+  console.log(3333)
+</script>
+</html>

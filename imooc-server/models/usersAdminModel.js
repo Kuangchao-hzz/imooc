@@ -1,16 +1,26 @@
 var Mongoose = require('mongoose')
+var bcrypt = require('bcrypt')
+var util = require('../Utils/utils')
 /*
-* @Field username [用户账号]
-* @Field realname [真实姓名]
-* @Field password [用户密码]
+* @Field username [管理员账号]
+* @Field realname [管理员真实姓名]
+* @Field password [管理员密码]
 * */
 // https://www.cnblogs.com/winyh/p/6682039.html
 // schema可以理解为mongoose对表结构的定义
 // 不仅仅可以定义文档的结构和属性，还可以定义文档的实例方法、静态模型方法、复合索引等 schema不具备操作数据库的能力
 var userAdminSchema = new Mongoose.Schema({
-  username: String,
+  username: {
+    type: String,
+    unique: true
+  },
+  password: {
+    type: String,
+    unique: true
+  },
   realname: String,
-  password: String,
+  rolename: String,
+  auth: Object,
   meta: {
 	  createTime: {
 		  type: Date,
@@ -24,13 +34,29 @@ var userAdminSchema = new Mongoose.Schema({
 })
 // 每次保存用户前都会执行该回调函数
 userAdminSchema.pre('save', function (next) {
-  if (this.isNew) {
-	  this.meta.createTime = this.meta.updateTime = Date.now()
+  let userAdmin = this
+  if (userAdmin.isNew) {
+    userAdmin.meta.createTime = userAdmin.meta.updateTime = Date.now()
   } else {
-	  this.meta.updateTime = Date.now()
+    userAdmin.meta.updateTime = Date.now()
   }
-  next()
+  util.bcryptHandle(userAdmin.password).then(resolve => {
+    userAdmin.password = resolve
+    next()
+  }, reject => {
+    console.log(`reject: ${reject}`)
+  })
 })
+
+userAdminSchema.methods = {
+  comparePassword: function(_password, cd) {
+    bcrypt.compare(_password, this.password, function (err, isMatch) {
+      if (err) return cd(err)
+
+      cd(null, isMatch)
+    })
+  }
+}
 
 // 静态方法，只有经过模型实例化model后才有这个方法
 userAdminSchema.statics = {

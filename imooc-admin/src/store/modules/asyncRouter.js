@@ -2,6 +2,7 @@ import _ from 'lodash'
 import { includeRouterMap, asyncRouterMap } from '../../router'
 
 function hasPermission (route, roles) {
+  // 如果某路由存在于权限表中且admin为true, 则有该路由权限
   if (roles[route.name] && roles[route.name].admin) {
     return true
   }

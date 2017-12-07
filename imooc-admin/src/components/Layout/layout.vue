@@ -50,7 +50,7 @@
             </a>
             <DropdownMenu slot="list">
               <DropdownItem name="ownSpace">个人中心</DropdownItem>
-              <DropdownItem name="loginout" divided>退出登录</DropdownItem>
+              <DropdownItem name="logout" divided>退出登录</DropdownItem>
             </DropdownMenu>
           </Dropdown>
           <Avatar :src="avatarPath" style="background: #619fe7;margin-left: 10px;"></Avatar>
@@ -134,9 +134,11 @@
         }, 1000)
       },
       handleClickUserDropdown (name) {
-        if (name === 'loginout') {
-          cookie.remove('auths')
-          this.$router.push('/signup')
+        if (name === 'logout') {
+          this.$http.userLogout().then(res => {
+            cookie.remove('auths')
+            this.$router.push('/signup')
+          })
         }
       },
       toggleClick () {

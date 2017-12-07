@@ -25,6 +25,7 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0
   },
   "globals": {
+    "_": false,
     "cookie": false,
     "swal": false,
     "moment": false,

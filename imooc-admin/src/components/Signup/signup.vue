@@ -59,7 +59,7 @@
             }
             this.$http.userSignup($params).then(res => {
               this.loading = false
-              cookie.set('auths', JSON.stringify(res.auth))
+              cookie.set('auths', JSON.stringify(res.data.auth))
               this.$router.push('/home/recommend')
             }, err => {
               this.loading = false

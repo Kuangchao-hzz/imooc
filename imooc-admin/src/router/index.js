@@ -79,24 +79,42 @@ export const asyncRouterMap = [
     component: Layout
   },
   {
-    path: '/admin',
-    name: 'admin',
+    path: '/courseAdmin',
+    name: 'courseAdmin',
     meta: {
-      title: '权限管理',
-      icon: 'stats-bars',
-      single: true
+      title: '课程管理',
+      icon: 'stats-bars'
     },
     component: Layout,
-    redirect: '/admin/AdminIndex',
     children: [
       {
-        path: 'AdminIndex',
-        name: 'AdminIndex',
+        path: 'allCourse',
+        name: 'allCourse',
+        meta: {
+          title: '所有课程',
+          icon: 'stats-bars'
+        },
+        component: resolve => { require(['../components/CourseAdmin/allCourse.vue'], resolve) }
+      }
+    ]
+  },
+  {
+    path: '/system',
+    name: 'system',
+    meta: {
+      title: '系统管理',
+      icon: 'stats-bars'
+    },
+    component: Layout,
+    children: [
+      {
+        path: 'admin',
+        name: 'admin',
         meta: {
           title: '权限管理',
           icon: 'stats-bars'
         },
-        component: resolve => { require(['../components/Admin/admin.vue'], resolve) }
+        component: resolve => { require(['../components/System/admin.vue'], resolve) }
       }
     ]
   }

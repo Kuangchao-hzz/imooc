@@ -13,7 +13,7 @@ import Util from './util'
 import Cookies from 'js-cookie'
 // http://www.jianshu.com/p/7436e40ac5d1
 /* eslint-disable no-unused-vars */
-import _ from 'lodash'
+import lodash from 'lodash'
 
 import 'normalize.css'
 import 'iview/dist/styles/iview.css'
@@ -29,6 +29,7 @@ Vue.use(axios)
 global.cookie = Cookies
 global.swal = Swal
 global.moment = Moment
+global._ = lodash
 Vue.prototype.$http = axios
 Vue.prototype.util = Util
 
